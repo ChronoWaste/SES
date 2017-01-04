@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+
+enum SearchEngine {
+    GOOGLE = 0;
+    BING = 1;
+}
+
+message Dork {
+    string plainText = 1;
+}
+
+message SearchRequest {
+    Dork dork = 2;
+    repeated SearchEngine enabledEngines = 3;
+}
+
+message SearchResponse {
+    Error error = 1;
+    SearchSession session = 2;
+    repeated Result results = 3;
+
+    enum Error {
+        NONE = 0;
+        ENGINE_UNAVAILABLE = 1;
+        CAPTCHA_PROMPT = 2;
+    }
+
+    message Result {
+        string title = 1;
+        string description = 2;
+        SearchEngine engine = 3;
+    }
+}
+
+message SearchSession {
+    Dork dork = 1;
+    Status status = 2;
+    SearchEngine currentEngine = 3;
+    repeated SearchEngine enabledEngines = 4;
+
+    enum Status {
+        IN_PROGRESS = 0;
+        DONE = 1;
+        CANCELED = 2;
+    }
+}
