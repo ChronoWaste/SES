@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ses.iml" filepath="$PROJECT_DIR$/.idea/modules/ses.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ses_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ses_main.iml" group="ses" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ses_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ses_test.iml" group="ses" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jses.iml" filepath="$PROJECT_DIR$/.idea/modules/jses.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jses_main.iml" filepath="$PROJECT_DIR$/.idea/modules/jses_main.iml" group="jses" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jses_test.iml" filepath="$PROJECT_DIR$/.idea/modules/jses_test.iml" group="jses" />
     </modules>
   </component>
 </project>
