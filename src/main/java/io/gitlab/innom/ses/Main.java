@@ -6,7 +6,7 @@ package io.gitlab.innom.ses;
 public class Main {
 
     private void main(String[] args) {
-
+        
     }
 
 }

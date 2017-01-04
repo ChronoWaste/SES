@@ -1,14 +1,11 @@
 group 'io.gitlab.innom'
 version '0.1.0'
 
+apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'com.google.protobuf'
 
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
+sourceCompatibility = JavaVersion.VERSION_1_8
 
 buildscript {
     repositories {
@@ -19,13 +16,40 @@ buildscript {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
+def grpcVersion = '1.0.3'
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.1.0'
+    compile "io.grpc:grpc-netty:${grpcVersion}"
+    compile "io.grpc:grpc-protobuf:${grpcVersion}"
+    compile "io.grpc:grpc-stub:${grpcVersion}"
+}
+
+idea {
+    module {
+        sourceDirs += file("${projectDir}/build/generated/source/proto/main/java")
+        sourceDirs += file("${projectDir}/build/generated/source/proto/main/grpc")
+    }
 }
 
 protobuf {
     protoc {
-        artifact = 'com.google.protobuf:protoc:3.0.0'
+        artifact = 'com.google.protobuf:protoc:3.1.0'
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {
+                option 'enable_deprecated=false'
+            }
+        }
     }
 }
