@@ -3,6 +3,7 @@ version '0.1.0'
 
 apply plugin: 'idea'
 apply plugin: 'java'
+apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.google.protobuf'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -10,9 +11,11 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
     }
 }
 
