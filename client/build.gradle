@@ -1,0 +1,7 @@
+apply plugin: 'application'
+
+mainClassName = "io.gitlab.innom.jses.client.Main"
+
+dependencies {
+    compile project(':core')
+}
