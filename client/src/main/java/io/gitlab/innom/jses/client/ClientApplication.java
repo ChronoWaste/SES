@@ -16,8 +16,8 @@ public class ClientApplication {
     private static final Logger logger = Logger.getLogger(ClientApplication.class.getName());
 
     private final ManagedChannel channel;
-    private final SearchingGrpc.SearchingBlockingStub blockingStub;
-    private final SearchingGrpc.SearchingStub asyncStub;
+    private final SearchGrpc.SearchBlockingStub blockingStub;
+    private final SearchGrpc.SearchStub asyncStub;
 
     private StreamObserver<SearchSession> requestsObserver;
 
@@ -29,8 +29,8 @@ public class ClientApplication {
 
     ClientApplication(ManagedChannelBuilder<?> channelBuilder) {
         channel = channelBuilder.build();
-        blockingStub = SearchingGrpc.newBlockingStub(channel);
-        asyncStub = SearchingGrpc.newStub(channel);
+        blockingStub = SearchGrpc.newBlockingStub(channel);
+        asyncStub = SearchGrpc.newStub(channel);
     }
 
     private void shutdown() throws InterruptedException {
@@ -44,6 +44,7 @@ public class ClientApplication {
                 .setPlainText(text).build();
 
         SessionRequest sessionRequest = SessionRequest.newBuilder()
+                .setEngine(SearchEngine.BING)
                 .setDork(dork)
                 .build();
 
@@ -56,18 +57,26 @@ public class ClientApplication {
             requestsObserver = asyncStub.getResults(new StreamObserver<SearchResponse>() {
                 @Override
                 public void onNext(SearchResponse response) {
-                    response.getResultsList().forEach(result -> System.out.println(result.getTitle()));
-                    requestsObserver.onNext(session);
+                    response.getResultsList().forEach(result -> System.out.println(result.getLink()));
+                    System.out.println("First -> " + response.getSession().getStart());
+
+                    if (response.getSession().getStatus() == SearchSession.Status.IN_PROGRESS) {
+                        requestsObserver.onNext(response.getSession());
+                    } else {
+                        requestsObserver.onCompleted();
+                    }
                 }
 
                 @Override
                 public void onError(Throwable t) {
-
+                    requestsObserver.onCompleted();
+                    synchronized (lock) {
+                        lock.notify();
+                    }
                 }
 
                 @Override
                 public void onCompleted() {
-                    requestsObserver.onCompleted();
                     synchronized (lock) {
                         lock.notify();
                     }

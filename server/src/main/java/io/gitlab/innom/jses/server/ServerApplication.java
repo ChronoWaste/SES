@@ -1,6 +1,11 @@
 package io.gitlab.innom.jses.server;
 
-import io.gitlab.innom.jses.server.service.SearchingImpl;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import io.gitlab.innom.jses.core.SearchGrpc;
+import io.gitlab.innom.jses.server.search.SearchModule;
+import io.gitlab.innom.jses.server.service.SearchImpl;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
@@ -9,18 +14,20 @@ import java.util.logging.Logger;
 
 public class ServerApplication {
 
-    private static final int PORT = 50051;
+    public static final int PORT = 50051;
 
     private static final Logger logger = Logger.getLogger(ServerApplication.class.getName());
 
     private Server server;
 
 
+    @Inject
+    public ServerApplication(Server server) {
+        this.server = server;
+    }
+
     private void start() throws IOException {
-        server = ServerBuilder.forPort(PORT)
-                .addService(new SearchingImpl())
-                .build()
-                .start();
+        server.start();
 
         logger.info("ServerApplication started, listening on " + PORT);
 
@@ -45,7 +52,10 @@ public class ServerApplication {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        ServerApplication server = new ServerApplication();
+        Injector injector = Guice.createInjector(new SearchModule());
+
+        ServerApplication server = injector.getInstance(ServerApplication.class);
+
         server.start();
         server.blockUntilShutdown();
     }

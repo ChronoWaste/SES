@@ -24,7 +24,7 @@ message SearchResponse {
 
     message SearchResult {
         string title = 1;
-        string description = 2;
+        string link = 2;
     }
 }
 
@@ -32,6 +32,7 @@ message SearchSession {
     Dork dork = 1;
     Status status = 2;
     SearchEngine engine = 3;
+    int32 start = 4;
 
     enum Status {
         IN_PROGRESS = 0;
@@ -39,7 +40,7 @@ message SearchSession {
     }
 }
 
-service Searching {
+service Search {
 
     rpc CreateSession (SessionRequest) returns (SearchSession) {}
 
