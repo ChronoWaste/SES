@@ -1,6 +1,5 @@
 package io.gitlab.innom.jses.server.search;
 
-import io.gitlab.innom.jses.core.*;
 import io.gitlab.innom.jses.core.SearchEngine;
 
 public class UnknownSearchEngineException extends Exception {

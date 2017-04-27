@@ -3,11 +3,8 @@ package io.gitlab.innom.jses.server;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import io.gitlab.innom.jses.core.SearchGrpc;
 import io.gitlab.innom.jses.server.search.SearchModule;
-import io.gitlab.innom.jses.server.service.SearchImpl;
 import io.grpc.Server;
-import io.grpc.ServerBuilder;
 
 import java.io.IOException;
 import java.util.logging.Logger;

@@ -3,7 +3,6 @@ package io.gitlab.innom.jses.server.search;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import io.gitlab.innom.jses.core.SearchGrpc;
 import io.gitlab.innom.jses.server.ServerApplication;
@@ -50,7 +49,7 @@ public class SearchModule extends AbstractModule {
         Proxy proxyTest = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 5555));
 
         OkHttpClient client = new OkHttpClient().newBuilder()
-                .proxy(proxyTest)
+                //.proxy(proxyTest)
                 .build();
 
         return new Retrofit.Builder()

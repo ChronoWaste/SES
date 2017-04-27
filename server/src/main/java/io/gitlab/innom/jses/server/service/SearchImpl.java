@@ -11,13 +11,10 @@ import io.gitlab.innom.jses.core.SearchSession;
 import io.gitlab.innom.jses.core.SessionRequest;
 import io.gitlab.innom.jses.server.search.SearchEngine;
 import io.gitlab.innom.jses.server.search.UnknownSearchEngineException;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
-import sun.util.logging.PlatformLogger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SearchImpl extends SearchGrpc.SearchImplBase {
@@ -69,6 +66,10 @@ public class SearchImpl extends SearchGrpc.SearchImplBase {
                 try {
                     response = engine.getResults(session);
                 } catch (IOException e) {
+                    responseObserver.onError(Status.ABORTED
+                            .withCause(e)
+                            .asException());
+
                     e.printStackTrace();
                 }
 

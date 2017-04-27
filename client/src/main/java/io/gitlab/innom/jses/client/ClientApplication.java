@@ -6,7 +6,6 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
-import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,12 +21,12 @@ public class ClientApplication {
     private StreamObserver<SearchSession> requestsObserver;
 
 
-    public ClientApplication(String host, int port) {
+    private ClientApplication(String host, int port) {
         this(ManagedChannelBuilder.forAddress(host, port)
                 .usePlaintext(true));
     }
 
-    ClientApplication(ManagedChannelBuilder<?> channelBuilder) {
+    private ClientApplication(ManagedChannelBuilder<?> channelBuilder) {
         channel = channelBuilder.build();
         blockingStub = SearchGrpc.newBlockingStub(channel);
         asyncStub = SearchGrpc.newStub(channel);
@@ -44,7 +43,7 @@ public class ClientApplication {
                 .setPlainText(text).build();
 
         SessionRequest sessionRequest = SessionRequest.newBuilder()
-                .setEngine(SearchEngine.BING)
+                .setEngine(SearchEngine.GOOGLE)
                 .setDork(dork)
                 .build();
 
@@ -63,12 +62,14 @@ public class ClientApplication {
                     if (response.getSession().getStatus() == SearchSession.Status.IN_PROGRESS) {
                         requestsObserver.onNext(response.getSession());
                     } else {
+                        System.out.println("Finished -> " + response.getSession().getStatus());
                         requestsObserver.onCompleted();
                     }
                 }
 
                 @Override
                 public void onError(Throwable t) {
+                    t.printStackTrace();
                     requestsObserver.onCompleted();
                     synchronized (lock) {
                         lock.notify();
